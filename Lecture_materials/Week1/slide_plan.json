@@ -1,0 +1,155 @@
+{
+  "deck_title": "데이터시각화 — 강의계획",
+  "audience": "데이터시각화 과목 1주차 대학생",
+  "style_preset": "kami-academic-korean",
+  "source_files": [
+    "../1주차_배포용.md"
+  ],
+  "slides": [
+    {
+      "id": "outline",
+      "type": "cover",
+      "teaching_goal": "1주차의 질문과 오늘 확인할 세 가지 목표를 구분한다.",
+      "core_message": "강의 운영, 데이터와 시각화의 관계, 판단 변화가 오늘의 세 축이다.",
+      "source_refs": ["1주차_배포용.md#Outline"],
+      "layout": "kami-dark-cover-with-outline",
+      "visual": "ink-blue title plate with three numbered goals",
+      "density": "medium"
+    },
+    {
+      "id": "course-one-sentence",
+      "type": "chapter-divider",
+      "teaching_goal": "교과목의 핵심 흐름을 한 문장으로 설명한다.",
+      "core_message": "수집·정리·분석·표현은 이해와 전달에 필요한 판단으로 이어진다.",
+      "source_refs": ["1주차_배포용.md#강의계획서의-한-문장"],
+      "layout": "kami-dark-chapter",
+      "visual": "four-step sentence rail",
+      "density": "low"
+    },
+    {
+      "id": "two-capabilities",
+      "type": "two-column-compare",
+      "teaching_goal": "구현 능력과 판단 능력을 구분하면서 연결한다.",
+      "core_message": "코드를 실행하는 능력과 결과를 판단하는 능력이 함께 필요하다.",
+      "source_refs": ["1주차_배포용.md#이-강의가-기르는-두-능력"],
+      "layout": "balanced-two-column",
+      "visual": "paired capability columns",
+      "density": "medium"
+    },
+    {
+      "id": "weeks-1-8",
+      "type": "timeline",
+      "teaching_goal": "전반부 학습 순서를 파악한다.",
+      "core_message": "환경과 데이터 처리 기초가 Matplotlib 시각화로 축적된다.",
+      "source_refs": ["1주차_배포용.md#1–8주차-진행-계획"],
+      "layout": "eight-week-roadmap",
+      "visual": "horizontal week rail",
+      "density": "medium"
+    },
+    {
+      "id": "weeks-9-15",
+      "type": "timeline",
+      "teaching_goal": "후반부 학습 순서를 파악한다.",
+      "core_message": "표현 개선에서 통계·머신러닝 결과 해석으로 확장한다.",
+      "source_refs": ["1주차_배포용.md#9–15주차-진행-계획"],
+      "layout": "seven-week-roadmap",
+      "visual": "horizontal week rail",
+      "density": "medium"
+    },
+    {
+      "id": "workflow-submit",
+      "type": "process-flow",
+      "teaching_goal": "수업 활동과 제출물 구조를 설명한다.",
+      "core_message": "질문에서 시작해 실행 가능한 코드·표·그림·해석을 함께 제출한다.",
+      "source_refs": ["1주차_배포용.md#수업-운영과-제출물"],
+      "layout": "process-plus-file-tree",
+      "visual": "analysis pipeline and artifact tree",
+      "density": "medium"
+    },
+    {
+      "id": "assessment",
+      "type": "table-to-cards",
+      "teaching_goal": "평가 요소의 비율과 목적을 연결한다.",
+      "core_message": "시험·실습·참여 기록이 구현 능력과 판단 능력을 함께 확인한다.",
+      "source_refs": ["1주차_배포용.md#평가-구조"],
+      "layout": "metric-grid",
+      "visual": "five weighted assessment cells",
+      "density": "medium"
+    },
+    {
+      "id": "ai-principles",
+      "type": "before-after",
+      "teaching_goal": "AI 허용 범위와 학생 책임을 구분한다.",
+      "core_message": "AI 사용은 허용되지만 실행·검증·수정·설명 책임은 학생에게 있다.",
+      "source_refs": ["1주차_배포용.md#AI-사용-원칙"],
+      "layout": "permission-responsibility-split",
+      "visual": "allowed vs responsible",
+      "density": "medium"
+    },
+    {
+      "id": "data-to-visual",
+      "type": "concept-explainer",
+      "teaching_goal": "데이터와 시각화의 관계를 설명한다.",
+      "core_message": "시각화는 기록을 눈으로 비교 가능한 위치·길이·색·모양으로 변환한다.",
+      "source_refs": ["1주차_배포용.md#데이터와-그림의-관계"],
+      "layout": "transformation-flow",
+      "visual": "table to visual encodings",
+      "density": "low"
+    },
+    {
+      "id": "data-science-position",
+      "type": "image-evidence",
+      "teaching_goal": "데이터과학에서 시각화의 위치를 설명한다.",
+      "core_message": "분야 지식은 맥락을, 전통 연구는 통계적 검증을, Danger zone은 통계 검증 부재의 위험을 보여주며 세 역량의 중심이 데이터과학이다.",
+      "source_refs": ["1주차_배포용.md#데이터과학에서-시각화의-위치", "assets/data-science-venn.png"],
+      "layout": "image-plus-interpretation",
+      "visual": "source Venn diagram with a four-region interpretation key",
+      "density": "medium"
+    },
+    {
+      "id": "explore-explain",
+      "type": "two-column-compare",
+      "teaching_goal": "탐색 시각화와 설명 시각화의 목적을 구분한다.",
+      "core_message": "탐색은 다음 질문을 찾고 설명은 선택한 메시지를 정확히 전달한다.",
+      "source_refs": ["1주차_배포용.md#시각화의-두-역할"],
+      "layout": "two-column-compare",
+      "visual": "explore vs explain matrix",
+      "density": "medium"
+    },
+    {
+      "id": "why-visualization",
+      "type": "quote",
+      "teaching_goal": "시각화가 의사결정에 필요한 이유를 말한다.",
+      "core_message": "시각화는 관계와 예외를 검증 가능한 질문과 다음 행동으로 바꾼다.",
+      "source_refs": ["1주차_배포용.md#문제와-현재-해법--왜-시각화가-중요한가"],
+      "layout": "kami-pull-quote",
+      "visual": "large thesis with evidence rail",
+      "density": "low"
+    },
+    {
+      "id": "next-week",
+      "type": "process-flow",
+      "teaching_goal": "2주차 준비와 다음 학습 단계를 안다.",
+      "core_message": "실행 환경과 재현 습관을 익힌 뒤 NumPy 배열 기초로 넘어간다.",
+      "source_refs": ["1주차_배포용.md#2주차로-이어지는-출발점"],
+      "layout": "three-step-next",
+      "visual": "python-environment-script-assert-to-numpy rail",
+      "density": "medium"
+    },
+    {
+      "id": "summary-end",
+      "type": "summary",
+      "teaching_goal": "1주차의 핵심을 세 문장으로 회상한다.",
+      "core_message": "구현과 판단, 책임 있는 AI 사용, 관계와 예외를 찾는 시각화가 과목의 중심이다.",
+      "source_refs": ["1주차_배포용.md#Summary"],
+      "layout": "kami-dark-end",
+      "visual": "three closing statements",
+      "density": "low"
+    }
+  ],
+  "revision_notes": [
+    "2026-08-28: 학생용 제목을 과목명과 강의 주제만 남긴 공식형으로 정리하고 제작 메타 문구를 제거.",
+    "2026-08-28: Outline을 표지 한 장에 통합하여 Markdown의 ## 14개와 HTML 슬라이드 14장을 일치시킴.",
+    "2026-08-29: 교재 그림 P-1의 Substantive expertise·Traditional research·Danger zone을 명시적으로 설명하고 실행 환경 설명을 Python Script 실행·검증 흐름으로 통일."
+  ]
+}
