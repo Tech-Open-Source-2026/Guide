@@ -1,0 +1,271 @@
+{
+  "deck_title": "Open소스프로그래밍 — 오픈소스와 Python 프로젝트 기초",
+  "audience": "Open소스프로그래밍 2주차 대학생",
+  "style_preset": "kami-academic-korean",
+  "source_files": [
+    "../2주차_배포용.md",
+    "../2주차_퀴즈.md",
+    "../_스토리텔링.md"
+  ],
+  "slides": [
+    {
+      "id": "s01-outline",
+      "type": "cover",
+      "teaching_goal": "Outline: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "공개 코드의 사용 권리, Git 협업 증거, Python 패키지와 가상환경을 차례로 연결한다.",
+      "source_refs": [
+        "../2주차_배포용.md#outline"
+      ],
+      "layout": "cover",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s02-공개-상태와-오픈소스-권리",
+      "type": "concept-explainer",
+      "teaching_goal": "공개 상태와 오픈소스 권리: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "공개 저장소에서 코드를 볼 수 있다는 사실만으로 실행·수정·재배포 권리가 자동으로 생기지 않는다.",
+      "source_refs": [
+        "../2주차_배포용.md#공개-상태와-오픈소스-권리"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s03-공개-코드는-왜-곧-오픈소스가-아닌가",
+      "type": "two-column-compare",
+      "teaching_goal": "공개 코드는 왜 곧 오픈소스가 아닌가?: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "중심 문제는 공개 저장소의 코드를 내가 하려는 행동에 사용할 권리가 있는지 판정하는 것이다.",
+      "source_refs": [
+        "../2주차_배포용.md#공개-코드는-왜-곧-오픈소스가-아닌가"
+      ],
+      "layout": "question",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s04-git과-github의-역할",
+      "type": "concept-explainer",
+      "teaching_goal": "Git과 GitHub의 역할: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "Git은 전체 변경 이력을 로컬에 기록하므로 네트워크 없이도 커밋·Branch 비교·이력 탐색을 수행한다.",
+      "source_refs": [
+        "../2주차_배포용.md#git과-github의-역할"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s05-git의-세-상태와-커밋",
+      "type": "code-walkthrough",
+      "teaching_goal": "Git의 세 상태와 커밋: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "작업 디렉터리는 편집 중인 파일, 스테이징은 다음 커밋에 넣을 변경, 로컬 저장소는 확정된 스냅샷을 보관한다.",
+      "source_refs": [
+        "../2주차_배포용.md#git의-세-상태와-커밋"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s06-issue-branch-pull-request의-증거-사슬",
+      "type": "concept-explainer",
+      "teaching_goal": "Issue·Branch·Pull Request의 증거 사슬: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "Issue는 문제와 완료 조건, Branch는 기본 흐름에서 격리한 작업, Pull Request는 차이·Review·자동 검사 결과를 맡는다.",
+      "source_refs": [
+        "../2주차_배포용.md#issue-branch-pull-request의-증거-사슬"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s07-왜-세-협업-도구를-함께-쓰는가",
+      "type": "two-column-compare",
+      "teaching_goal": "왜 세 협업 도구를 함께 쓰는가?: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "중심 문제는 여러 기여자의 변경을 기본 Branch에 넣으면서 의도·작업·검토 증거를 잃지 않는 것이다.",
+      "source_refs": [
+        "../2주차_배포용.md#왜-세-협업-도구를-함께-쓰는가"
+      ],
+      "layout": "question",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s08-python-패키지의-두-이름과-배포",
+      "type": "concept-explainer",
+      "teaching_goal": "Python 패키지의 두 이름과 배포: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "Import package는 Python 코드가 import my_tool로 찾는 모듈 경계이고, Distribution package는 pip install my-tool로 설치하는 배포 산출물이다.",
+      "source_refs": [
+        "../2주차_배포용.md#python-패키지의-두-이름과-배포"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s09-좋은-패키지-경계",
+      "type": "concept-explainer",
+      "teaching_goal": "좋은 패키지 경계: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "응집도는 함께 변하는 기능을 모으고, 캡슐화는 내부 구현을 공개 API 뒤에 숨긴다.",
+      "source_refs": [
+        "../2주차_배포용.md#좋은-패키지-경계"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s10-가상환경의-두-prefix",
+      "type": "code-walkthrough",
+      "teaching_goal": "가상환경의 두 Prefix: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "기준 Python 설치는 sys.base_prefix, 현재 가상환경 디렉터리는 sys.prefix가 가리킨다.",
+      "source_refs": [
+        "../2주차_배포용.md#가상환경의-두-prefix"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s11-활성화와-정확한-설치-대상",
+      "type": "concept-explainer",
+      "teaching_goal": "활성화와 정확한 설치 대상: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "source .venv/bin/activate는 .venv/bin을 셸의 PATH 앞에 두어 짧은 python 명령이 환경 Python을 고르게 한다.",
+      "source_refs": [
+        "../2주차_배포용.md#활성화와-정확한-설치-대상"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s12-실행-설치-import-경로의-일치",
+      "type": "code-walkthrough",
+      "teaching_goal": "실행·설치·Import 경로의 일치: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "sys.executable은 실행 Python, python -m pip --version은 설치 도구, requests.__file__은 실제 Import 파일의 위치를 보여 준다.",
+      "source_refs": [
+        "../2주차_배포용.md#실행-설치-import-경로의-일치"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s13-가상환경의-범위와-한계",
+      "type": "concept-explainer",
+      "teaching_goal": "가상환경의 범위와 한계: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "Python 3.11과 3.12 같은 기준 설치를 따로 두고 각 프로젝트가 필요한 버전으로 자체 .venv를 만들 수 있다.",
+      "source_refs": [
+        "../2주차_배포용.md#가상환경의-범위와-한계"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s14-실습-산출물과-순서",
+      "type": "concept-explainer",
+      "teaching_goal": "실습 산출물과 순서: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "hello_open.py, requirements.txt, .gitignore, 실행 절차가 있는 README.md를 저장소에 남긴다.",
+      "source_refs": [
+        "../2주차_배포용.md#실습-산출물과-순서"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s15-프로젝트와-git-시작",
+      "type": "code-walkthrough",
+      "teaching_goal": "프로젝트와 Git 시작: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "프로젝트와 Git 시작",
+      "source_refs": [
+        "../2주차_배포용.md#프로젝트와-git-시작"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s16-가상환경과-의존성-설치",
+      "type": "code-walkthrough",
+      "teaching_goal": "가상환경과 의존성 설치: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "가상환경과 의존성 설치",
+      "source_refs": [
+        "../2주차_배포용.md#가상환경과-의존성-설치"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s17-실행과-경로-검증",
+      "type": "code-walkthrough",
+      "teaching_goal": "실행과 경로 검증: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "실행과 경로 검증",
+      "source_refs": [
+        "../2주차_배포용.md#실행과-경로-검증"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s18-gitignore와-readme",
+      "type": "code-walkthrough",
+      "teaching_goal": ".gitignore와 README: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": ".gitignore와 README",
+      "source_refs": [
+        "../2주차_배포용.md#gitignore와-readme"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s19-커밋과-github-공유",
+      "type": "code-walkthrough",
+      "teaching_goal": "커밋과 GitHub 공유: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "커밋과 GitHub 공유",
+      "source_refs": [
+        "../2주차_배포용.md#커밋과-github-공유"
+      ],
+      "layout": "code-layout",
+      "visual": "compact command block paired with verification criteria",
+      "density": "low"
+    },
+    {
+      "id": "s20-완료-기준과-문제-해결",
+      "type": "concept-explainer",
+      "teaching_goal": "완료 기준과 문제 해결: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "새 폴더에서 README 순서만 따라 .venv를 만들고 의존성을 설치한 뒤 프로그램을 실행할 수 있다.",
+      "source_refs": [
+        "../2주차_배포용.md#완료-기준과-문제-해결"
+      ],
+      "layout": "grid-2",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    },
+    {
+      "id": "s21-summary",
+      "type": "summary",
+      "teaching_goal": "Summary: 퀴즈와 실습에 필요한 판단 근거를 설명한다.",
+      "core_message": "공개 상태는 사용 권리가 아니며 행동별 허용과 의무는 개별 라이선스로 판정한다.",
+      "source_refs": [
+        "../2주차_배포용.md#summary"
+      ],
+      "layout": "summary",
+      "visual": "Kami editorial content blocks",
+      "density": "low"
+    }
+  ],
+  "revision_notes": [
+    "2026-08-29: 학생용 덱을 64장에서 21장으로 압축했다.",
+    "2026-08-29: 공개 코드 권리와 협업 증거 사슬의 중심 질문 두 곳을 유지했다.",
+    "2026-08-29: 2주차 퀴즈 15문항의 정답 근거를 핵심 개념 장표에 보존했다.",
+    "2026-08-29: 기존 16·25·26·33·43쪽의 고밀도 그림·표·코드를 짧은 비교·원리·검증 장표로 재구성했다."
+  ]
+}
+

@@ -1,12 +1,12 @@
 (() => {
-  const currentWeek = 1;
+  const currentWeek = Number(location.pathname.match(/Week(\d+)/)?.[1] || 1);
   const toolbar = document.createElement("div");
   toolbar.id = "lecture-toolbar";
   toolbar.setAttribute("aria-label", "강의 주차와 화면 제어");
   toolbar.innerHTML = `
     <a href="../../">주차 목록</a>
     <label><span class="lecture-sr-only">주차 선택</span>
-      <select aria-label="주차 선택"><option value="1" selected>1주차 · 강의계획과 Git 기초</option></select>
+      <select aria-label="주차 선택"><option value="1">1주차 · 강의계획과 Git 기초</option><option value="2">2주차 · 오픈소스와 Python 프로젝트 기초</option></select>
     </label>`;
 
   const style = document.createElement("style");
@@ -18,7 +18,15 @@
   select.addEventListener("change", event => { location.href = `../Week${event.target.value}/`; });
   toolbar.addEventListener("keydown", event => event.stopPropagation());
 
-  const fullscreen = document.querySelector("#fullscreen-button, #fullscreen");
-  if (fullscreen) toolbar.appendChild(fullscreen);
+  let fullscreen = document.querySelector("#fullscreen-button, #fullscreen");
+  if (!fullscreen) {
+    fullscreen = document.createElement("button");
+    fullscreen.type = "button";
+    fullscreen.textContent = "전체화면 (F)";
+    const toggleFullscreen = async () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    fullscreen.addEventListener("click", toggleFullscreen);
+    window.addEventListener("keydown", event => { if (event.key.toLowerCase() === "f") { event.preventDefault(); toggleFullscreen(); } });
+  }
+  toolbar.appendChild(fullscreen);
   document.body.appendChild(toolbar);
 })();

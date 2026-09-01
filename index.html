@@ -16,8 +16,8 @@
   <main>
     <div class="mark">開</div><div class="eyebrow">OPEN SOURCE · LECTURE MATERIALS</div>
     <h1>Open소스프로그래밍 강의자료</h1><p>강의할 주차를 선택하면 전체화면 발표 덱이 열립니다.</p>
-    <div class="picker"><label for="week-selector">주차 선택</label><select id="week-selector"><option value="Lecture_materials/Week1/">1주차 · 강의계획과 Git 기초</option></select><button id="open-week" type="button">강의 시작</button></div>
-    <div class="note">현재는 1주차만 배포되어 있습니다.</div>
+    <div class="picker"><label for="week-selector">주차 선택</label><select id="week-selector"><option value="Lecture_materials/Week1/">1주차 · 강의계획과 Git 기초</option><option value="Lecture_materials/Week2/">2주차 · 오픈소스와 Python 프로젝트 기초</option></select><button id="open-week" type="button">강의 시작</button></div>
+    <div class="note">현재 1–2주차가 배포되어 있습니다.</div>
   </main>
   <script>const selector=document.getElementById('week-selector');document.getElementById('open-week').addEventListener('click',()=>location.href=selector.value);selector.addEventListener('keydown',event=>{if(event.key==='Enter')location.href=selector.value});</script>
 </body>
