@@ -1,638 +1,259 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>데이터시각화 — 강의계획</title>
-  <meta name="description" content="데이터시각화 1주차 강의 슬라이드">
-  <style>
-    :root {
-      --parchment: #f5f4ed;
-      --ivory: #faf9f5;
-      --sand: #e8e6dc;
-      --sand-dark: #d8d5c7;
-      --ink: #1b365d;
-      --ink-light: #b5c8dc;
-      --near-black: #141413;
-      --dark-warm: #3d3d3a;
-      --olive: #504e49;
-      --stone: #6b6a64;
-      --tag: #e4ecf5;
-      --serif: "Noto Serif KR", "Source Han Serif K", "NanumMyeongjo", Georgia, serif;
-      --sans: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
-      --mono: "JetBrains Mono", D2Coding, monospace;
-    }
-
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-    body {
-      background: #111b29;
-      color: var(--near-black);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-    button { font: inherit; }
-    #viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
-    #stage {
-      width: 1920px;
-      height: 1080px;
-      position: relative;
-      overflow: hidden;
-      transform-origin: center center;
-      background: var(--parchment);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
-    }
-    #deck { position: absolute; inset: 0; }
-    .slide {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      padding: 78px 96px 72px;
-      overflow: hidden;
-      background: var(--parchment);
-    }
-    .slide.active { display: flex; }
-    .slide.dark { background: var(--ink); color: var(--ivory); }
-    .slide::after {
-      content: "";
-      position: absolute;
-      width: 430px;
-      height: 430px;
-      right: -250px;
-      bottom: -260px;
-      border: 1px solid var(--sand-dark);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .slide.dark::after { border-color: rgba(250, 249, 245, 0.13); }
-    .chrome {
-      position: absolute;
-      top: 28px;
-      left: 96px;
-      right: 96px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--mono);
-      font-size: 18px;
-      letter-spacing: 0.08em;
-      color: var(--stone);
-      z-index: 3;
-    }
-    .dark .chrome { color: rgba(250, 249, 245, 0.62); }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid currentColor;
-      border-radius: 50%;
-      font-family: var(--serif);
-      font-size: 18px;
-    }
-    .slide-foot {
-      position: absolute;
-      left: 96px;
-      right: 96px;
-      bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--stone);
-      font-family: var(--mono);
-      font-size: 18px;
-      letter-spacing: 0.04em;
-      font-variant-numeric: tabular-nums;
-      z-index: 3;
-    }
-    .dark .slide-foot { color: rgba(250, 249, 245, 0.62); }
-    .counter {
-      min-width: 92px;
-      text-align: center;
-      padding: 7px 12px;
-      border: 1px solid var(--sand-dark);
-      border-radius: 4px;
-      background: var(--ivory);
-      color: var(--near-black);
-    }
-    .dark .counter {
-      color: var(--ivory);
-      background: transparent;
-      border-color: rgba(250, 249, 245, 0.28);
-    }
-    .slide-inner {
-      width: 100%;
-      height: 100%;
-      min-height: 0;
-      display: grid;
-      align-content: center;
-      position: relative;
-      z-index: 2;
-    }
-    .eyebrow, .section-num {
-      font-family: var(--mono);
-      font-size: 20px;
-      line-height: 1.2;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-      color: var(--ink);
-      font-variant-numeric: tabular-nums;
-    }
-    .dark .eyebrow, .dark .section-num { color: rgba(250, 249, 245, 0.68); }
-    h1, h2, h3, p { margin: 0; }
-    h1, h2, h3 { font-family: var(--serif); font-weight: 500; }
-    h1 { font-size: 92px; line-height: 1.13; letter-spacing: -0.035em; }
-    h2 { font-size: 56px; line-height: 1.18; letter-spacing: -0.025em; }
-    h3 { font-size: 32px; line-height: 1.3; }
-    .hl { color: var(--ink-light); }
-    .lede { font-family: var(--serif); font-size: 32px; line-height: 1.5; color: var(--olive); }
-    .dark .lede { color: rgba(250, 249, 245, 0.75); }
-    .body-copy { font-size: 29px; line-height: 1.5; color: var(--dark-warm); }
-    .muted { color: var(--olive); }
-    .strong { color: var(--ink); font-weight: 500; }
-    .rule { width: 100%; height: 1px; background: var(--sand-dark); }
-    .dark .rule { background: rgba(250, 249, 245, 0.25); }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: 4px;
-      background: var(--tag);
-      color: var(--ink);
-      font-family: var(--mono);
-      font-size: 19px;
-      letter-spacing: 0.03em;
-    }
-    ul.dash { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
-    ul.dash li { position: relative; padding-left: 25px; font-size: 28px; line-height: 1.5; color: var(--dark-warm); }
-    ul.dash li::before { content: "–"; position: absolute; left: 0; color: var(--ink); }
-
-    .cover .slide-inner { grid-template-columns: .88fr 1.12fr; align-items: center; gap: 86px; }
-    .cover-title { display: grid; gap: 30px; }
-    .cover h1 { color: var(--ivory); max-width: 14ch; }
-    .cover .lede { max-width: 32ch; }
-    .cover-outline { display: grid; gap: 0; border-bottom: 1px solid rgba(250,249,245,.26); }
-    .cover-goal { display: grid; grid-template-columns: 92px 1fr; gap: 26px; padding: 25px 0; border-top: 1px solid rgba(250,249,245,.26); }
-    .cover-goal b { font: 500 42px/1 var(--serif); color: var(--ink-light); font-variant-numeric: tabular-nums; }
-    .cover-goal h3 { color: var(--ivory); margin-bottom: 8px; }
-    .cover-goal p { color: rgba(250,249,245,.72); font-size: 23px; line-height: 1.45; }
-
-    .title-block { display: grid; gap: 15px; margin-bottom: 42px; }
-    .title-block h2 { max-width: 21ch; }
-    .title-block .lede { max-width: 48ch; }
-    .goal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--sand-dark); border-bottom: 1px solid var(--sand-dark); }
-    .goal { padding: 32px 32px 28px; border-right: 1px solid var(--sand-dark); }
-    .goal:last-child { border-right: 0; }
-    .goal b { display: block; font-family: var(--serif); color: var(--ink); font-size: 54px; font-weight: 500; margin-bottom: 17px; font-variant-numeric: tabular-nums; }
-    .goal h3 { margin-bottom: 12px; }
-    .goal p { font-size: 25px; line-height: 1.48; color: var(--olive); }
-
-    .chapter .slide-inner { text-align: center; justify-items: center; gap: 25px; }
-    .chapter .chapter-num { font-family: var(--serif); font-size: 116px; color: rgba(250,249,245,.55); font-variant-numeric: tabular-nums; }
-    .chapter h2 { color: var(--ivory); font-size: 72px; max-width: 18ch; }
-    .chapter .lede { max-width: 46ch; }
-    .flow-words { display: flex; align-items: center; gap: 20px; font-family: var(--mono); font-size: 23px; color: rgba(250,249,245,.62); margin-top: 18px; }
-    .flow-words i { font-style: normal; color: var(--ink-light); }
-
-    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; }
-    .capability { min-height: 530px; padding: 42px; border-top: 2px solid var(--ink); background: var(--ivory); }
-    .capability .cap-num { font-family: var(--serif); font-size: 68px; color: var(--ink); font-variant-numeric: tabular-nums; }
-    .capability h3 { font-size: 43px; margin: 14px 0 26px; }
-
-    .roadmap { display: grid; gap: 34px; }
-    .week-rail { display: grid; grid-template-columns: repeat(8, 1fr); border-top: 1px solid var(--sand-dark); border-bottom: 1px solid var(--sand-dark); }
-    .week-rail.seven { grid-template-columns: repeat(7, 1fr); }
-    .week { min-height: 260px; padding: 26px 20px; border-right: 1px solid var(--sand-dark); display: flex; flex-direction: column; gap: 18px; }
-    .week:last-child { border-right: 0; }
-    .week .n { font-family: var(--serif); font-size: 50px; color: var(--ink); font-variant-numeric: tabular-nums; }
-    .week .topic { font-size: 23px; line-height: 1.38; color: var(--dark-warm); }
-    .week.exam { background: var(--ink); }
-    .week.exam .n, .week.exam .topic { color: var(--ivory); }
-    .roadmap-note { display: flex; justify-content: space-between; gap: 40px; font-family: var(--serif); font-size: 27px; color: var(--olive); }
-
-    .workflow { grid-template-columns: 1.15fr .85fr; gap: 72px; }
-    .process-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 35px; }
-    .process-step { padding: 25px 20px; background: var(--ivory); border: 1px solid var(--sand-dark); min-height: 160px; }
-    .process-step b { display: block; font-family: var(--serif); font-size: 40px; color: var(--ink); margin-bottom: 13px; font-variant-numeric: tabular-nums; }
-    .process-step span { font-size: 25px; line-height: 1.35; }
-    .file-tree { background: var(--ivory); border: 1px solid var(--sand-dark); padding: 38px 42px; align-self: center; }
-    .file-tree .label { font-family: var(--mono); color: var(--ink); font-size: 20px; margin-bottom: 24px; }
-    pre { margin: 0; font-family: var(--mono); font-size: 24px; line-height: 1.65; color: var(--near-black); white-space: pre-wrap; }
-
-    .assessment-grid { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--sand-dark); border-bottom: 1px solid var(--sand-dark); }
-    .assessment { padding: 31px 25px; border-right: 1px solid var(--sand-dark); min-height: 265px; }
-    .assessment:last-child { border-right: 0; }
-    .assessment .pct { font-family: var(--serif); font-size: 68px; color: var(--ink); font-variant-numeric: tabular-nums; }
-    .assessment h3 { margin: 13px 0 10px; }
-    .assessment p { font-size: 23px; line-height: 1.4; color: var(--olive); }
-
-    .permission { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 0; border: 1px solid var(--sand-dark); background: var(--ivory); }
-    .permission > div { padding: 42px 48px; }
-    .permission > div + div { border-left: 1px solid var(--sand-dark); }
-    .permission h3 { color: var(--ink); font-size: 39px; margin-bottom: 24px; }
-    .responsibility-line { margin-top: 34px; padding: 24px 28px; border-left: 3px solid var(--ink); font-family: var(--serif); font-size: 32px; line-height: 1.4; color: var(--near-black); }
-
-    .transform { grid-template-columns: .85fr 110px 1.15fr; align-items: center; gap: 28px; }
-    .table-shape { background: var(--ivory); border: 1px solid var(--sand-dark); padding: 30px; }
-    .mini-table { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-    .mini-table span { height: 48px; background: var(--sand); display: grid; place-items: center; font-family: var(--mono); font-size: 19px; color: var(--olive); }
-    .arrow { font-family: var(--serif); font-size: 74px; color: var(--ink); text-align: center; }
-    .encoding { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .encoding-item { min-height: 190px; display: grid; align-content: end; gap: 14px; padding: 24px; background: var(--ivory); border-bottom: 3px solid var(--ink); }
-    .encoding-item .glyph { font-family: var(--serif); font-size: 66px; line-height: 1; color: var(--ink); }
-    .encoding-item span:last-child { font-size: 24px; }
-
-    .image-evidence { grid-template-columns: 1.15fr .85fr; gap: 62px; align-items: center; }
-    .figure-frame { background: var(--ivory); border: 1px solid var(--sand-dark); padding: 28px; }
-    .figure-frame img { display: block; width: 100%; height: auto; max-height: 585px; object-fit: contain; }
-    .figure-frame figcaption { font-family: var(--mono); font-size: 18px; color: var(--stone); margin-top: 16px; }
-    .interpretation { display: grid; gap: 24px; }
-    .interpretation .note { padding: 28px 0; border-top: 1px solid var(--sand-dark); }
-    .interpretation .note b { display: block; font-family: var(--serif); font-size: 38px; color: var(--ink); margin-bottom: 12px; }
-    .interpretation .note p { font-size: 26px; line-height: 1.45; color: var(--dark-warm); }
-    .venn-interpretation { display: grid; align-content: center; gap: 18px; }
-    .venn-interpretation .title-block { margin-bottom: 2px; }
-    .venn-interpretation .title-block h2 { font-size: 45px; max-width: 18ch; }
-    .venn-key { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--sand-dark); border-left: 1px solid var(--sand-dark); }
-    .venn-key > div { padding: 20px 22px; border-right: 1px solid var(--sand-dark); border-bottom: 1px solid var(--sand-dark); background: var(--ivory); }
-    .venn-key b { display: block; font-family: var(--serif); font-size: 27px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
-    .venn-key p { font-size: 21px; line-height: 1.4; color: var(--dark-warm); }
-    .venn-caption { font-family: var(--mono); font-size: 18px; line-height: 1.45; color: var(--stone); }
-
-    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--sand-dark); border-bottom: 1px solid var(--sand-dark); }
-    .compare .side { padding: 38px 48px; min-height: 450px; }
-    .compare .side + .side { border-left: 1px solid var(--sand-dark); }
-    .compare .side h3 { font-size: 48px; color: var(--ink); margin-bottom: 12px; }
-    .compare .question { font-family: var(--serif); font-size: 29px; color: var(--olive); margin-bottom: 28px; }
-
-    .thesis .slide-inner { max-width: 1500px; justify-self: center; gap: 35px; }
-    .thesis blockquote { margin: 0; padding: 12px 0 12px 42px; border-left: 4px solid var(--ink); font-family: var(--serif); font-size: 58px; line-height: 1.35; color: var(--near-black); max-width: 26ch; }
-    .evidence-rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--sand-dark); }
-    .evidence-rail div { padding: 25px 28px; border-right: 1px solid var(--sand-dark); font-size: 25px; line-height: 1.42; color: var(--olive); }
-    .evidence-rail div:last-child { border-right: 0; }
-
-    .next-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 34px; }
-    .next-step { min-height: 240px; padding: 30px; background: var(--ivory); border: 1px solid var(--sand-dark); }
-    .next-step .icon { font-family: var(--mono); font-size: 31px; color: var(--ink); margin-bottom: 30px; }
-    .next-step h3 { margin-bottom: 12px; }
-    .next-step p { font-size: 24px; line-height: 1.42; color: var(--olive); }
-    .prep { margin-top: 28px; display: flex; gap: 16px; flex-wrap: wrap; }
-
-    .end .slide-inner { align-content: center; gap: 42px; }
-    .end h2 { color: var(--ivory); font-size: 76px; max-width: 19ch; }
-    .closing-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid rgba(250,249,245,.28); border-bottom: 1px solid rgba(250,249,245,.28); }
-    .closing-points div { padding: 28px 30px; border-right: 1px solid rgba(250,249,245,.22); font-family: var(--serif); font-size: 29px; line-height: 1.45; color: rgba(250,249,245,.78); }
-    .closing-points div:last-child { border-right: 0; }
-
-    #progress { position: fixed; left: 0; bottom: 0; width: 100%; height: 4px; background: rgba(255,255,255,.12); z-index: 60; }
-    #progress-bar { height: 100%; width: 0; background: #b5c8dc; transition: width .35s ease; }
-    #fullscreen-button {
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 90;
-      padding: 10px 15px;
-      border: 1px solid rgba(181, 200, 220, .65);
-      border-radius: 5px;
-      background: rgba(17, 27, 41, .88);
-      color: #faf9f5;
-      font-family: var(--sans);
-      font-size: 18px;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-    }
-    #fullscreen-button:hover,
-    #fullscreen-button:focus-visible { background: #1b365d; outline: 2px solid #b5c8dc; outline-offset: 2px; }
-    :fullscreen #fullscreen-button { opacity: .25; }
-    :fullscreen #fullscreen-button:hover,
-    :fullscreen #fullscreen-button:focus-visible { opacity: 1; }
-    #dot-nav { position: fixed; left: 50%; bottom: 17px; transform: translateX(-50%); display: flex; gap: 7px; z-index: 70; }
-    #dot-nav button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(181,200,220,.35); cursor: pointer; }
-    #dot-nav button.active { width: 26px; border-radius: 9px; background: #b5c8dc; }
-    #overview {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      overflow: auto;
-      padding: 42px;
-      background: rgba(245,244,237,.98);
-    }
-    #overview.open { display: block; }
-    .overview-head { width: min(1500px, 100%); margin: 0 auto 28px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 20px; color: var(--stone); }
-    .overview-grid { width: min(1500px, 100%); margin: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-    .overview-card { border: 1px solid var(--sand-dark); background: var(--ivory); padding: 22px; cursor: pointer; min-height: 150px; }
-    .overview-card.active { border: 3px solid var(--ink); }
-    .overview-card b { display: block; font-family: var(--mono); font-size: 19px; color: var(--ink); margin-bottom: 14px; }
-    .overview-card span { font-family: var(--serif); font-size: 25px; line-height: 1.32; color: var(--near-black); }
-
-    @media print {
-      @page { size: 16in 9in; margin: 0; }
-      html, body { width: auto; height: auto; overflow: visible; background: white; }
-      #viewport { position: static; display: block; overflow: visible; }
-      #stage { width: 1920px; height: auto; transform: none !important; box-shadow: none; overflow: visible; }
-      #deck { position: static; }
-      .slide { display: flex !important; position: relative; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
-      #dot-nav, #progress, #overview, #fullscreen-button { display: none !important; }
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    }
-  </style>
-</head>
-<body>
-  <div id="viewport">
-    <main id="stage" aria-live="polite">
-      <div id="deck">
-
-        <section class="slide dark cover active" data-slide-id="outline" data-title="Outline">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Week 01 · Outline</span></div>
-          <div class="slide-inner">
-            <div class="cover-title">
-              <p class="eyebrow">Data Visualization · Week 01</p>
-              <h1>데이터시각화 —<br><span class="hl">강의계획</span></h1>
-              <p class="lede">그림을 만드는 법보다 먼저, 데이터에서 관계와 예외를 찾아 판단으로 연결하는 이유를 묻습니다.</p>
-            </div>
-            <div class="cover-outline">
-              <article class="cover-goal"><b>01</b><div><h3>강의 운영</h3><p>학습 목표, 15주 진행 순서와 평가 방법을 확인합니다.</p></div></article>
-              <article class="cover-goal"><b>02</b><div><h3>핵심 관계</h3><p>데이터와 시각화의 관계, 그리고 이 과목이 필요한 이유를 묻습니다.</p></div></article>
-              <article class="cover-goal"><b>03</b><div><h3>판단 변화</h3><p>관계와 예외를 발견한 그림이 다음 질문과 행동을 어떻게 바꾸는지 봅니다.</p></div></article>
-            </div>
-          </div>
-          <div class="slide-foot"><span>데이터시각화 · 1주차</span><span class="counter">01 / 14</span></div>
-        </section>
-
-        <section class="slide dark chapter" data-slide-id="course-one-sentence" data-title="강의계획서의 한 문장">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Course in one sentence</span></div>
-          <div class="slide-inner">
-            <p class="chapter-num">01</p>
-            <h2>데이터를 수집·정리·분석하고 표현하여 <span class="hl">판단을 돕습니다.</span></h2>
-            <p class="lede">NumPy · pandas · Matplotlib · Seaborn · scikit-learn을 하나의 분석 흐름에서 사용합니다.</p>
-            <div class="flow-words"><span>수집</span><i>→</i><span>정리</span><i>→</i><span>분석</span><i>→</i><span>표현</span><i>→</i><span>이해와 전달</span></div>
-          </div>
-          <div class="slide-foot"><span>세부 목표·평가·주별 계획은 공식 강의계획서 기준</span><span class="counter">02 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="two-capabilities" data-title="두 능력">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Implementation × Judgment</span></div>
-          <div class="slide-inner">
-            <div class="title-block"><p class="section-num">02 · CAPABILITIES</p><h2>좋은 시각화는 구현과 판단이 만나는 곳에서 나옵니다.</h2></div>
-            <div class="split">
-              <article class="capability"><div class="cap-num">A</div><h3>구현 능력</h3><ul class="dash"><li>Python 분석 환경을 구성합니다.</li><li>NumPy와 pandas로 데이터를 정리합니다.</li><li>Matplotlib과 Seaborn으로 실행 가능한 그림을 남깁니다.</li></ul></article>
-              <article class="capability"><div class="cap-num">B</div><h3>판단 능력</h3><ul class="dash"><li>질문에 맞는 차트·축·색·주석을 선택합니다.</li><li>보이는 사실과 추가 가정이 필요한 해석을 구분합니다.</li><li>AI가 만든 코드와 결과를 실행·검증·수정·설명합니다.</li></ul></article>
-            </div>
-          </div>
-          <div class="slide-foot"><span>실행만 해도 부족하고, 해석만 해도 부족합니다.</span><span class="counter">03 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="weeks-1-8" data-title="1–8주차">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Weeks 01–08</span></div>
-          <div class="slide-inner roadmap">
-            <div class="title-block"><p class="section-num">03 · FIRST HALF</p><h2>기초에서 기본 시각화까지</h2></div>
-            <div class="week-rail">
-              <div class="week"><span class="n">01</span><span class="topic">강의소개와 환경 점검</span></div>
-              <div class="week"><span class="n">02</span><span class="topic">Python 환경과 배열 기초</span></div>
-              <div class="week"><span class="n">03</span><span class="topic">NumPy 데이터 처리</span></div>
-              <div class="week"><span class="n">04</span><span class="topic">pandas 표 데이터</span></div>
-              <div class="week"><span class="n">05</span><span class="topic">요약과 시계열 처리</span></div>
-              <div class="week"><span class="n">06</span><span class="topic">Matplotlib 기본</span></div>
-              <div class="week"><span class="n">07</span><span class="topic">다변량·subplot</span></div>
-              <div class="week exam"><span class="n">08</span><span class="topic">중간고사</span></div>
-            </div>
-            <div class="roadmap-note"><span>환경 → 배열 → 표 → 시간 → 그림</span><span>중간고사: Python·NumPy·pandas·Matplotlib 기초</span></div>
-          </div>
-          <div class="slide-foot"><span>전반부 · 데이터 처리와 기본 시각화</span><span class="counter">04 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="weeks-9-15" data-title="9–15주차">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Weeks 09–15</span></div>
-          <div class="slide-inner roadmap">
-            <div class="title-block"><p class="section-num">04 · SECOND HALF</p><h2>표현 개선에서 모델 해석까지</h2></div>
-            <div class="week-rail seven">
-              <div class="week"><span class="n">09</span><span class="topic">주석과 스타일 조정</span></div>
-              <div class="week"><span class="n">10</span><span class="topic">Seaborn 통계 시각화</span></div>
-              <div class="week"><span class="n">11</span><span class="topic">ML 결과 시각화 기초</span></div>
-              <div class="week"><span class="n">12</span><span class="topic">예측 모델 결과</span></div>
-              <div class="week"><span class="n">13</span><span class="topic">차원 축소와 군집</span></div>
-              <div class="week"><span class="n">14</span><span class="topic">종합 실습과 설계 점검</span></div>
-              <div class="week exam"><span class="n">15</span><span class="topic">기말고사</span></div>
-            </div>
-            <div class="roadmap-note"><span>다듬기 → 통계 → 모델 → 차원 → 종합</span><span>기말고사: 선택·해석·개선 능력 종합</span></div>
-          </div>
-          <div class="slide-foot"><span>후반부 · 표현 개선과 모델 결과 해석</span><span class="counter">05 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="workflow-submit" data-title="수업 운영과 제출물">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Workflow & Deliverables</span></div>
-          <div class="slide-inner workflow">
-            <div>
-              <div class="title-block"><p class="section-num">05 · PRACTICE</p><h2>질문에서 산출물까지<br>직접 실행합니다.</h2><p class="lede">중간 확인 과정도 Python 코드로 남기고, 제출 결과는 새 환경에서 다시 만들어져야 합니다.</p></div>
-              <div class="process-rail"><div class="process-step"><b>01</b><span>데이터 질문</span></div><div class="process-step"><b>02</b><span>처리 코드</span></div><div class="process-step"><b>03</b><span>표와 그림</span></div><div class="process-step"><b>04</b><span>짧은 해석</span></div></div>
-            </div>
-            <aside class="file-tree"><div class="label">기본 제출 형태</div><pre>main.py
-requirements.txt
-output/
-  summary.csv
-  figures/*.png
-  report.md</pre></aside>
-          </div>
-          <div class="slide-foot"><span>실행 가능성 · 데이터 처리 · 차트 · 해석 확인</span><span class="counter">06 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="assessment" data-title="평가 구조">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Assessment</span></div>
-          <div class="slide-inner">
-            <div class="title-block"><p class="section-num">06 · EVALUATION</p><h2>평가는 구현과 판단을 함께 확인합니다.</h2></div>
-            <div class="assessment-grid">
-              <div class="assessment"><span class="pct">10%</span><h3>출석</h3><p>수업 참여의 기본 조건</p></div>
-              <div class="assessment"><span class="pct">20%</span><h3>중간고사</h3><p>기초 개념과 해석</p></div>
-              <div class="assessment"><span class="pct">40%</span><h3>기말고사</h3><p>선택·해석·개선 종합</p></div>
-              <div class="assessment"><span class="pct">15%</span><h3>실험·실습</h3><p>실행과 설명 가능성</p></div>
-              <div class="assessment"><span class="pct">15%</span><h3>토론·팀활동</h3><p>질문·답변·비교·피드백 기록</p></div>
-            </div>
-          </div>
-          <div class="slide-foot"><span>시험은 개념·해석, 실습은 실제 실행·설명 능력</span><span class="counter">07 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="ai-principles" data-title="AI 사용 원칙">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>AI Usage</span></div>
-          <div class="slide-inner">
-            <div class="title-block"><p class="section-num">07 · RESPONSIBILITY</p><h2>AI 사용은 허용됩니다.<br>책임은 위임되지 않습니다.</h2></div>
-            <div class="permission">
-              <div><h3>허용 범위</h3><ul class="dash"><li>코드 초안</li><li>오류 설명</li><li>시각화 대안 탐색</li><li>AI 사용 여부 자체는 감점 사유가 아님</li></ul></div>
-              <div><h3>학생의 책임</h3><ul class="dash"><li>제출 코드를 직접 실행하고 결과를 확인</li><li>차트가 그렇게 만들어진 이유를 설명</li><li>조건이 바뀌면 코드를 직접 수정</li><li>출처·라이선스·민감정보를 확인</li></ul></div>
-            </div>
-            <p class="responsibility-line">실행 · 검증 · 수정 · 설명은 제출한 학생의 책임입니다.</p>
-          </div>
-          <div class="slide-foot"><span>AI는 도구 · 검증은 학습자</span><span class="counter">08 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="data-to-visual" data-title="데이터와 그림의 관계">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Data → Visual Encoding</span></div>
-          <div class="slide-inner transform">
-            <div class="table-shape"><p class="section-num">DATA</p><h2 style="margin:16px 0 28px">정확한 기록</h2><div class="mini-table"><span>12</span><span>A</span><span>3.4</span><span>10월</span><span>18</span><span>B</span><span>5.1</span><span>11월</span><span>15</span><span>A</span><span>4.2</span><span>12월</span></div><p class="body-copy" style="margin-top:25px">값·범주·시간·관계를 기계가 처리할 수 있게 기록합니다.</p></div>
-            <div class="arrow">→</div>
-            <div><p class="section-num">VISUALIZATION</p><h2 style="margin:16px 0 28px">비교 가능한 표현</h2><div class="encoding"><div class="encoding-item"><span class="glyph">↔</span><span>위치</span></div><div class="encoding-item"><span class="glyph">▮</span><span>길이</span></div><div class="encoding-item"><span class="glyph">●</span><span>색</span></div><div class="encoding-item"><span class="glyph">◇</span><span>모양</span></div></div><p class="body-copy" style="margin-top:25px">표에서 놓치기 쉬운 비교·추세·분포·관계를 눈으로 판단하게 합니다.</p></div>
-          </div>
-          <div class="slide-foot"><span>장식이 아니라 비교를 위한 변환</span><span class="counter">09 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="data-science-position" data-title="데이터과학에서 시각화의 위치">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Data Science</span></div>
-          <div class="slide-inner image-evidence">
-            <figure class="figure-frame"><img src="assets/data-science-venn.png" alt="계산 능력, 수학과 통계, 분야 지식의 교집합을 나타낸 데이터과학 벤 다이어그램"><figcaption>교재 그림 P-1 · 데이터과학의 세 요소</figcaption></figure>
-            <div class="venn-interpretation"><div class="title-block"><p class="section-num">08 · POSITION</p><h2>교집합은 갖춘 역량과 빠진 역량을 함께 보여줍니다.</h2></div><div class="venn-key"><div><b>Substantive expertise</b><p>데이터의 맥락·측정 방법·현장 제약을 아는 분야 지식입니다.</p></div><div><b>Traditional research</b><p>수학·통계와 분야 지식의 결합입니다. 계산 자동화는 별도 역량입니다.</p></div><div><b>Danger zone</b><p>계산과 분야 지식은 있지만 통계 검증이 빠져 우연·편향을 놓칠 수 있습니다.</p></div><div><b>Data Science</b><p>계산·통계·분야 지식이 모두 만나 재현성과 타당성을 함께 확보합니다.</p></div></div><p class="venn-caption">Machine Learning = 계산 능력 + 수학·통계 · Danger zone은 코딩이 위험하다는 뜻이 아니라 통계 검증의 부재를 경고합니다.</p></div>
-          </div>
-          <div class="slide-foot"><span>그림을 만드는 코드 + 그림을 읽는 지식</span><span class="counter">10 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="explore-explain" data-title="시각화의 두 역할">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Explore × Explain</span></div>
-          <div class="slide-inner">
-            <div class="title-block"><p class="section-num">09 · TWO ROLES</p><h2>같은 데이터라도 목적이 다르면 그림도 달라집니다.</h2></div>
-            <div class="compare">
-              <div class="side"><h3>탐색</h3><p class="question">“다음에 무엇을 확인할까?”</p><ul class="dash"><li>분포·이상값·관계·결측 패턴을 찾습니다.</li><li>여러 표현을 빠르게 시험합니다.</li><li>완성도보다 새로운 질문이 중요합니다.</li></ul></div>
-              <div class="side"><h3>설명</h3><p class="question">“독자가 무엇을 이해해야 할까?”</p><ul class="dash"><li>핵심 비교와 근거만 선별합니다.</li><li>제목·주석·축·색을 메시지에 맞춥니다.</li><li>정확하고 오해 없는 전달이 중요합니다.</li></ul></div>
-            </div>
-          </div>
-          <div class="slide-foot"><span>탐색은 질문을 찾고, 설명은 메시지를 전달합니다.</span><span class="counter">11 / 14</span></div>
-        </section>
-
-        <section class="slide thesis" data-slide-id="why-visualization" data-title="왜 시각화인가">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Why Visualization?</span></div>
-          <div class="slide-inner">
-            <p class="section-num">10 · CENTRAL QUESTION</p>
-            <blockquote>시각화는 표에서 놓치기 쉬운 관계와 예외를 <span class="strong">검증 가능한 질문과 다음 행동</span>으로 바꿉니다.</blockquote>
-            <div class="evidence-rail"><div>중심 문제<br><span class="strong">유용한 정보 찾기</span></div><div>현재 해법<br><span class="strong">질문에 맞는 시각화</span></div><div>다음 단계<br><span class="strong">추가 증거와 행동 결정</span></div></div>
-          </div>
-          <div class="slide-foot"><span>보인 관계는 결론이 아니라 출발점입니다.</span><span class="counter">12 / 14</span></div>
-        </section>
-
-        <section class="slide" data-slide-id="next-week" data-title="2주차로 이어지는 출발점">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Next Week</span></div>
-          <div class="slide-inner">
-            <div class="title-block"><p class="section-num">11 · NEXT</p><h2>2주차부터 실행 가능한 분석 환경을 만듭니다.</h2></div>
-            <div class="next-grid"><div class="next-step"><div class="icon">$ python</div><h3>환경</h3><p>Python 경로와 버전을 확인합니다.</p></div><div class="next-step"><div class="icon">main.py</div><h3>실행</h3><p>입력부터 결과 저장까지 연결합니다.</p></div><div class="next-step"><div class="icon">assert</div><h3>검증</h3><p>작은 입력으로 계산 결과를 확인합니다.</p></div><div class="next-step"><div class="icon">np.array</div><h3>배열</h3><p>많은 숫자를 저장·선택·변형합니다.</p></div></div>
-            <div class="prep"><span class="tag">Python 기초 문법 복습</span><span class="tag">CSV 행·열 구조 확인</span><span class="tag">실행 환경과 강의자료 경로 점검</span></div>
-          </div>
-          <div class="slide-foot"><span>Python 환경 · Script · assert · NumPy</span><span class="counter">13 / 14</span></div>
-        </section>
-
-        <section class="slide dark end" data-slide-id="summary-end" data-title="요약">
-          <div class="chrome"><span class="brand"><span class="brand-mark">視</span> 데이터시각화</span><span>Week 01 · Summary</span></div>
-          <div class="slide-inner">
-            <p class="eyebrow">Three ideas to keep</p>
-            <h2>데이터를 <span class="hl">보고, 판단하고, 설명하는</span> 한 학기</h2>
-            <div class="closing-points"><div>구현 능력과 판단 능력을 함께 기릅니다.</div><div>AI를 사용할 수 있지만 검증 책임은 학생에게 있습니다.</div><div>시각화는 관계와 예외를 다음 질문과 행동으로 바꿉니다.</div></div>
-          </div>
-          <div class="slide-foot"><span>다음: Python 분석 환경과 배열 기초</span><span class="counter">14 / 14</span></div>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <nav id="dot-nav" aria-label="슬라이드 이동"></nav>
-  <button id="fullscreen-button" type="button" title="F 키로도 전환할 수 있습니다">전체 화면 · F</button>
-  <div id="progress"><div id="progress-bar"></div></div>
-  <aside id="overview" aria-hidden="true"><div class="overview-head"><span>슬라이드 전체 보기</span><span>ESC로 닫기</span></div><div class="overview-grid"></div></aside>
-
-  <script>
-    (() => {
-      const stage = document.getElementById("stage");
-      const slides = [...document.querySelectorAll(".slide")];
-      const nav = document.getElementById("dot-nav");
-      const progress = document.getElementById("progress-bar");
-      const overview = document.getElementById("overview");
-      const overviewGrid = overview.querySelector(".overview-grid");
-      const fullscreenButton = document.getElementById("fullscreen-button");
-      const storageKey = "dataviz-week1-kami-slide";
-      let current = Number.parseInt(localStorage.getItem(storageKey) || "0", 10);
-      if (!Number.isFinite(current)) current = 0;
-      current = Math.max(0, Math.min(slides.length - 1, current));
-
-      const scaleStage = () => {
-        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-        stage.style.transform = `scale(${scale})`;
-      };
-
-      slides.forEach((slide, index) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.setAttribute("aria-label", `${index + 1}번 슬라이드`);
-        button.addEventListener("click", () => show(index));
-        nav.appendChild(button);
-
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "overview-card";
-        card.innerHTML = `<b>${String(index + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}</b><span>${slide.dataset.title}</span>`;
-        card.addEventListener("click", () => { toggleOverview(false); show(index); });
-        overviewGrid.appendChild(card);
-      });
-
-      const show = (index) => {
-        current = Math.max(0, Math.min(slides.length - 1, index));
-        slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
-        [...nav.children].forEach((button, i) => button.classList.toggle("active", i === current));
-        [...overviewGrid.children].forEach((card, i) => card.classList.toggle("active", i === current));
-        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
-        localStorage.setItem(storageKey, String(current));
-        document.title = `${current + 1}/${slides.length} · ${slides[current].dataset.title} · 데이터시각화`;
-      };
-
-      const toggleOverview = (force) => {
-        const open = typeof force === "boolean" ? force : !overview.classList.contains("open");
-        overview.classList.toggle("open", open);
-        overview.setAttribute("aria-hidden", String(!open));
-      };
-
-      const toggleFullscreen = async () => {
-        try {
-          if (document.fullscreenElement) {
-            await document.exitFullscreen();
-          } else {
-            await document.documentElement.requestFullscreen();
-          }
-        } catch (error) {
-          console.error("전체화면 전환에 실패했습니다.", error);
-        }
-      };
-
-      fullscreenButton.addEventListener("click", toggleFullscreen);
-      document.addEventListener("fullscreenchange", () => {
-        fullscreenButton.textContent = document.fullscreenElement ? "전체 화면 종료 · F" : "전체 화면 · F";
-      });
-
-      window.addEventListener("keydown", (event) => {
-        if (event.key.toLowerCase() === "f") { event.preventDefault(); toggleFullscreen(); return; }
-        if (event.key === "Escape" && !document.fullscreenElement) { event.preventDefault(); toggleOverview(); return; }
-        if (overview.classList.contains("open")) return;
-        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) { event.preventDefault(); show(current + 1); }
-        if (["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key)) { event.preventDefault(); show(current - 1); }
-        if (event.key === "Home") { event.preventDefault(); show(0); }
-        if (event.key === "End") { event.preventDefault(); show(slides.length - 1); }
-      });
-
-      let wheelLock = false;
-      window.addEventListener("wheel", (event) => {
-        if (overview.classList.contains("open") || wheelLock || Math.abs(event.deltaY) < 20) return;
-        show(current + (event.deltaY > 0 ? 1 : -1));
-        wheelLock = true;
-        window.setTimeout(() => { wheelLock = false; }, 450);
-      }, { passive: true });
-
-      let touchX = 0;
-      window.addEventListener("touchstart", (event) => { touchX = event.touches[0].clientX; }, { passive: true });
-      window.addEventListener("touchend", (event) => {
-        const delta = event.changedTouches[0].clientX - touchX;
-        if (Math.abs(delta) > 60) show(current + (delta < 0 ? 1 : -1));
-      }, { passive: true });
-
-      window.addEventListener("resize", scaleStage);
-      scaleStage();
-      show(current);
-    })();
-  </script>
-</body>
-</html>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Open소스프로그래밍 — 강의계획과 Git 기초</title><meta name="description" content="Open소스프로그래밍 — 강의계획과 Git 기초 1주차 강의 슬라이드"><style>
+:root {
+  --parchment:#f5f4ed; --ivory:#faf9f5; --sand:#e8e6dc; --sand-dark:#d6d2c5;
+  --ink:#1b365d; --ink-light:#b5c8dc; --near-black:#141413; --dark-warm:#3d3d3a;
+  --olive:#504e49; --stone:#6b6a64; --tag:#e4ecf5;
+  --serif:"Noto Serif KR","Source Han Serif K","NanumMyeongjo",Georgia,serif;
+  --sans:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;
+  --mono:"JetBrains Mono",D2Coding,"SFMono-Regular",Consolas,monospace;
+}
+*{box-sizing:border-box} html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:#111b29;color:var(--near-black);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit} #viewport{position:fixed;inset:0;overflow:hidden}
+#stage{width:1920px;height:1080px;position:absolute;left:0;top:0;overflow:hidden;transform-origin:top left;background:var(--parchment);box-shadow:0 24px 80px #00000047}
+#deck{position:absolute;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:76px 96px 68px;overflow:hidden;background:var(--parchment)}
+.slide.active{display:flex}.slide.dark{background:var(--ink);color:var(--ivory)}
+.slide:after{content:"";position:absolute;width:430px;height:430px;right:-250px;bottom:-260px;border:1px solid var(--sand-dark);border-radius:50%;pointer-events:none}
+.slide.dark:after{border-color:#faf9f521}.chrome{position:absolute;top:27px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font:18px/1.2 var(--mono);letter-spacing:.06em;color:var(--stone);z-index:3}
+.dark .chrome{color:#faf9f59e}.brand{display:flex;align-items:center;gap:14px}.mark{display:grid;place-items:center;width:36px;height:36px;border:1px solid currentColor;border-radius:50%;font:500 15px/1 var(--serif);letter-spacing:0}
+.slide-foot{position:absolute;left:96px;right:96px;bottom:22px;display:flex;justify-content:space-between;align-items:center;color:var(--stone);font:18px/1.2 var(--mono);font-variant-numeric:tabular-nums;z-index:3}
+.dark .slide-foot{color:#faf9f59e}.counter{min-width:105px;text-align:center;padding:7px 12px;border:1px solid var(--sand-dark);border-radius:4px;background:var(--ivory);color:var(--near-black)}
+.dark .counter{color:var(--ivory);background:transparent;border-color:#faf9f547}.slide-inner{width:100%;height:100%;min-height:0;display:grid;align-content:center;position:relative;z-index:2}
+h1,h2,h3,p{margin:0}h1,h2,h3{font-family:var(--serif);font-weight:500}h1{font-size:88px;line-height:1.12;letter-spacing:-.035em}h2{font-size:54px;line-height:1.18;letter-spacing:-.025em}h3{font-size:31px;line-height:1.3;color:var(--near-black)}
+.eyebrow,.section-num{font:18px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);font-variant-numeric:tabular-nums}.dark .eyebrow,.dark .section-num{color:#faf9f5ad}
+.title-block{display:grid;gap:13px;margin-bottom:30px}.title-block h2{max-width:28ch}.title-block .intent{font:24px/1.45 var(--serif);color:var(--olive);max-width:64ch}
+.dark .title-block h2{color:var(--ivory)}.dark .title-block .intent{color:#faf9f5bd}
+.groups{display:grid;gap:24px;min-height:0}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.single{grid-template-columns:1fr}
+.group{min-width:0;padding:26px 30px;border-top:2px solid var(--ink);background:var(--ivory);overflow:hidden}.group h3{margin-bottom:16px}.group>:first-child{margin-top:0}.group>:last-child{margin-bottom:0}
+.group p,.group li{font-size:26px;line-height:1.46;color:var(--dark-warm)}.group p{margin:10px 0}.group ul,.group ol{margin:0;padding-left:28px;display:grid;gap:10px}.group li::marker{color:var(--ink)}
+.group strong{font-weight:600;color:var(--near-black)}.group em{font-style:normal;color:var(--olive);font-size:.88em}.group a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:4px}
+code{font-family:var(--mono);color:var(--ink);background:var(--tag);padding:.05em .28em;border-radius:4px}pre{margin:10px 0 0;padding:22px 25px;overflow:hidden;background:#18283f;color:#f7f4e9;border-left:4px solid var(--ink-light);font:22px/1.45 var(--mono);white-space:pre-wrap;word-break:break-word}
+pre code{color:inherit;background:transparent;padding:0}.group table{width:100%;border-collapse:collapse;margin-top:14px;font-size:21px;line-height:1.3}.group th,.group td{padding:10px 14px;border-bottom:1px solid var(--sand-dark);text-align:left;vertical-align:top}.group th{font-family:var(--serif);font-weight:500;color:var(--ink);background:var(--tag)}
+.group img{display:block;max-width:100%;max-height:500px;object-fit:contain;margin:12px auto 6px;background:#fff;border:1px solid var(--sand-dark)}
+.has-image .group{display:grid;align-content:center}.has-image .group img{max-height:570px}.has-image.grid-2 .group img{max-height:450px}
+.density-medium .group p,.density-medium .group li{font-size:24px}.density-medium .group{padding:22px 26px}.density-medium pre{font-size:22px}.density-medium .group table{font-size:22px}.density-medium .group th,.density-medium .group td{padding:8px 11px}
+.density-high .title-block{margin-bottom:20px}.density-high h2{font-size:46px}.density-high .group{padding:18px 22px}.density-high .group h3{font-size:27px;margin-bottom:10px}.density-high .group p,.density-high .group li{font-size:22px;line-height:1.34}.density-high .group ul,.density-high .group ol{gap:6px}.density-high pre{font-size:22px;line-height:1.35;padding:15px 18px}.density-high .group table{font-size:22px}.density-high .group th,.density-high .group td{padding:6px 9px}
+.cover .slide-inner{grid-template-columns:.88fr 1.12fr;align-items:center;gap:80px}.cover-title{display:grid;gap:28px}.cover h1{color:var(--ivory);max-width:13ch}.cover .subtitle{font:27px/1.52 var(--serif);color:#faf9f5c2;max-width:35ch}
+.cover-outline{display:grid;gap:0;border-bottom:1px solid #faf9f542}.cover .group{background:transparent;border-top:1px solid #faf9f542;padding:24px 0}.cover .group h3{color:var(--ivory)}.cover .group p,.cover .group li{color:#faf9f5c2;font-size:23px}.cover .group li::marker{color:var(--ink-light)}
+.summary .slide-inner{align-content:center}.summary .group{background:#faf9f510;border-top-color:var(--ink-light)}.summary .group h3{color:var(--ivory)}.summary .group p,.summary .group li{color:#faf9f5d1}.summary .group li::marker{color:var(--ink-light)}
+.question .group:first-child{border-top-width:4px}.question .group:last-child{border-top-color:var(--stone)}
+.process-flow .groups{position:relative}.process-flow .group{border-top-width:4px}
+#nav{position:absolute;left:50%;bottom:25px;transform:translateX(-50%);display:flex;gap:7px;z-index:8;max-width:62%;padding:7px 10px;border-radius:999px;background:#f5f4eddf;border:1px solid var(--sand-dark)}
+#nav button{width:6px;height:6px;padding:0;border:0;border-radius:99px;background:#1b365d38;cursor:pointer;transition:.2s}#nav button.active{width:20px;background:var(--ink)}
+#progress{position:absolute;left:0;bottom:0;height:3px;background:var(--ink);z-index:12;transition:width .25s}
+#overview{position:absolute;inset:0;display:none;padding:54px 70px;overflow:auto;background:#f5f4edf7;z-index:20}#overview.open{display:block}.overview-head{display:flex;justify-content:space-between;margin-bottom:25px;font:18px/1.2 var(--mono);color:var(--stone)}
+.overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.overview-card{min-height:112px;padding:16px;text-align:left;border:1px solid var(--sand-dark);background:var(--ivory);color:var(--near-black);cursor:pointer}.overview-card.active,.overview-card:hover{border:2px solid var(--ink)}.overview-card b{display:block;color:var(--ink);font:500 25px/1 var(--serif);margin-bottom:10px}.overview-card span{font-size:18px;line-height:1.25}
+#fullscreen{position:absolute;right:28px;bottom:22px;z-index:30;padding:10px 16px;border:1px solid var(--sand-dark);border-radius:4px;background:#faf9f5e8;color:var(--ink);font:16px/1 var(--sans);font-weight:600;cursor:pointer;box-shadow:0 6px 20px #0000001f}#fullscreen:hover,#fullscreen:focus-visible{background:#fff;outline:2px solid var(--ink);outline-offset:2px}
+@media print{html,body{overflow:visible;background:#fff}#viewport{display:block;position:static}#stage{width:auto;height:auto;transform:none!important;box-shadow:none;overflow:visible}#deck{position:static}.slide{display:flex!important;position:relative;width:1920px;height:1080px;break-after:page}#nav,#progress,#overview,#fullscreen{display:none!important}}
+</style></head><body><div id="viewport"><main id="stage"><div id="deck"><section class="slide dark cover cover density-low" data-slide-id="s01-outline" data-title="Outline" data-slide-kind="cover"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 01 / 13</span></div><div class="slide-inner cover-grid"><div class="cover-title"><p class="eyebrow">OPEN SOURCE PROGRAMMING · 1주차</p><h1>Open소스프로그래밍 — 강의계획과 Git 기초</h1><p class="subtitle">공개 프로젝트의 목표를 확인하고, 코드 변경을 기록·복구·통합하는 Git의 역할을 이해한다.</p></div><div class="cover-outline"><div class="groups grid-2"><article class="group"><h3>오늘 확인할 것</h3><ul>
+<li>강의계획서에서 학습 목표·15주 진행 순서·평가·최종 산출물을 확인한다.</li>
+<li>코드 변경을 잃지 않고 설명·복구·통합해야 하는 문제를 정의한다.</li>
+<li>Git의 스냅샷·전체 이력·브랜치·병합이 코드 변경을 관리하는 원리를 이해한다.</li>
+</ul></article><article class="group"><h3>오늘의 범위</h3><ul>
+<li>1주차는 패키징과 도구 명령보다 한 학기의 목적과 Git을 쓰는 이유에 집중한다.</li>
+<li>오픈소스 라이선스·Python 프로젝트·가상환경 실습은 2주차부터 시작한다.</li>
+</ul></article></div></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">01 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s02-강의계획서의-한-문장" data-title="강의계획서의 한 문장" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 02 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">02 · TWO-COLUMN-COMPARE</p><h2>강의계획서의 한 문장</h2></header><div class="groups grid-2"><article class="group"><h3>교과목 개요</h3><ul>
+<li>다른 사람이 설치·검증·개선할 수 있는 공개 Python 프로젝트를 만드는 과정을 배운다.</li>
+<li>Git·GitHub·패키징·테스트·CI·문서화·최신 관리 도구를 하나의 저장소에 연결한다.</li>
+</ul></article><article class="group"><h3>공식 문서</h3><ul>
+<li>세부 목표·평가·주별 계획은 <strong>2026 Open소스프로그래밍 강의계획서</strong>를 기준으로 한다.</li>
+<li>주별 순서는 수업 진행 상황과 학습자의 준비도에 따라 일부 조정될 수 있다.</li>
+ </ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">02 / 13</span></div></section><section class="slide light concept-explainer density-low" data-slide-id="s03-이-강의가-기르는-세-능력" data-title="이 강의가 기르는 세 능력" data-slide-kind="concept-explainer"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 03 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">03 · CONCEPT-EXPLAINER</p><h2>이 강의가 기르는 세 능력</h2></header><div class="groups grid-3"><article class="group"><h3>변경 협업</h3><ul>
+<li>Git과 GitHub로 변경 이력을 남기고 Issue·Pull Request·Review를 연결한다.</li>
+</ul></article><article class="group"><h3>배포와 검증</h3><ul>
+<li>Python 코드를 설치 가능한 패키지 구조로 만들고 테스트와 CI로 변경을 검증한다.</li>
+</ul></article><article class="group"><h3>분석과 개선</h3><ul>
+<li>공개 저장소의 코드·문서·이슈·Pull Request를 근거로 프로젝트 품질을 판단한다.</li>
+<li>도구의 점검 결과·실행 결과·의사결정을 기록하고 실제 저장소 개선으로 바꾼다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">03 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s04-한-학기-완주-산출물" data-title="한 학기 완주 산출물" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 04 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">04 · TWO-COLUMN-COMPARE</p><h2>한 학기 완주 산출물</h2></header><div class="groups grid-2"><article class="group"><h3>공개 저장소 수준의 프로젝트</h3><ul>
+<li>저장소에 실행 가능한 Python 패키지와 처음 보는 사람도 따라 할 수 있는 README를 둔다.</li>
+<li>테스트·CI·문서화 결과로 코드가 작동한다는 근거를 제시한다.</li>
+<li>uv·Ruff·OpenSSF Scorecard 적용 기록으로 현대적인 관리 흐름을 보여 준다.</li>
+</ul></article><article class="group"><h3>누적 방식</h3><ul>
+<li>매주 새 과제를 버리는 대신 한 저장소의 구조·코드·검증·문서를 계속 개선한다.</li>
+<li>커밋 이력은 무엇을 언제 왜 바꾸었는지를 보여 주는 학습 증거가 된다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">04 / 13</span></div></section><section class="slide light table-to-cards table-layout density-medium" data-slide-id="s05-1-8주차-진행-계획" data-title="1–8주차 진행 계획" data-slide-kind="table-to-cards"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 05 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">05 · TABLE-TO-CARDS</p><h2>1–8주차 진행 계획</h2></header><div class="groups single"><article class="group"><h3>프로젝트 기반 만들기</h3><ul>
+<li>전반부는 오픈소스의 권리에서 시작해 패키지·의존성·테스트·코드 품질·CI를 연결한다.</li>
+<li>8주차 중간고사는 2–7주차 개념과 실제 저장소 적용 판단을 평가한다.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="right">주차</th>
+<th>주요 학습 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">1</td>
+<td>강의소개와 개발 환경 점검</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>오픈소스와 Python 프로젝트 기초</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>Python 패키지 구조와 빌드</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>의존성 관리와 실행 인터페이스</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td>테스트와 품질 확인</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td>코드 품질 자동화</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td>CI 기반 개발 자동화</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td>중간고사</td>
+</tr>
+</tbody>
+</table></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">05 / 13</span></div></section><section class="slide light table-to-cards table-layout density-medium" data-slide-id="s06-9-15주차-진행-계획" data-title="9–15주차 진행 계획" data-slide-kind="table-to-cards"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 06 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">06 · TABLE-TO-CARDS</p><h2>9–15주차 진행 계획</h2></header><div class="groups single"><article class="group"><h3>공개 프로젝트 운영하기</h3><ul>
+<li>후반부는 문서화·릴리스·유지보수·커뮤니티에서 최신 관리·품질·보안 도구로 확장한다.</li>
+<li>15주차에는 기말고사와 함께 한 학기 동안 개선한 저장소 산출물을 제출한다.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="right">주차</th>
+<th>주요 학습 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">9</td>
+<td>오픈소스 문서화</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>유지보수와 릴리스 관리</td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>프로젝트 표준화와 커뮤니티 운영</td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>최신 Python 프로젝트 관리 도구</td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>최신 코드 품질 도구</td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>오픈소스 보안·운영 점검</td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td>기말고사 및 최종 산출물 제출</td>
+</tr>
+</tbody>
+</table></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">06 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s07-수업-운영" data-title="수업 운영" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 07 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">07 · TWO-COLUMN-COMPARE</p><h2>수업 운영</h2></header><div class="groups grid-2"><article class="group"><h3>이론 2시간</h3><ul>
+<li>개념이 필요한 이유에서 시작해 구조·작동 원리·작은 사례 순서로 이해한다.</li>
+<li>교재와 공식 문서를 실제 공개 저장소의 파일·이슈·Pull Request에 연결한다.</li>
+</ul></article><article class="group"><h3>실습 2시간</h3><ul>
+<li>이론에서 다룬 개념을 개인 GitHub 저장소에 바로 적용한다.</li>
+<li>실행 명령·결과·변경 이유를 README나 주제별 보고서에 남긴다.</li>
+<li>모든 변경은 되돌리고 검토할 수 있는 작은 커밋으로 축적한다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">07 / 13</span></div></section><section class="slide light table-to-cards table-layout density-low" data-slide-id="s08-평가-구조" data-title="평가 구조" data-slide-kind="table-to-cards"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 08 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">08 · TABLE-TO-CARDS</p><h2>평가 구조</h2></header><div class="groups grid-2"><article class="group"><h3>비율</h3><ul>
+<li>출석은 15%, 중간고사와 기말고사는 각각 30%이다.</li>
+<li>실험·실습은 10%, GitHub Discussion과 팀활동 참여는 15%이다.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>평가 요소</th>
+<th align="right">비율</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>출석</td>
+<td align="right">15%</td>
+</tr>
+<tr>
+<td>중간고사</td>
+<td align="right">30%</td>
+</tr>
+<tr>
+<td>기말고사</td>
+<td align="right">30%</td>
+</tr>
+<tr>
+<td>실험·실습</td>
+<td align="right">10%</td>
+</tr>
+<tr>
+<td>Discussion·팀활동</td>
+<td align="right">15%</td>
+</tr>
+</tbody>
+</table></article><article class="group"><h3>평가 증거</h3><ul>
+<li>시험은 개념을 저장소 상황에 적용해 판단하는 능력을 확인한다.</li>
+<li>실습은 실행 결과·저장소 정리·검증 기록을 확인한다.</li>
+<li>참여도는 재현 가능한 질문·답변·협업 기록을 확인한다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">08 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s09-ai와-오픈소스-책임" data-title="AI와 오픈소스 책임" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 09 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">09 · TWO-COLUMN-COMPARE</p><h2>AI와 오픈소스 책임</h2></header><div class="groups grid-2"><article class="group"><h3>AI 사용</h3><ul>
+<li>AI가 만든 코드는 실행·테스트·라이선스 확인을 거친 뒤 자신의 판단으로 제출한다.</li>
+<li>이해하지 못한 코드는 결과가 동작해도 설명 가능한 제출물이 아니다.</li>
+</ul></article><article class="group"><h3>공개 협업</h3><ul>
+<li>외부 프로젝트에 Issue나 Pull Request를 보낼 때 재현 조건·수정 이유·영향 범위를 적는다.</li>
+<li>비밀정보와 불필요한 로그를 제거하고 프로젝트의 기여 규칙과 사람을 존중한다.</li>
+<li>실패한 시도도 원인과 수정 과정을 남기면 유효한 학습 근거가 된다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">09 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s10-코드-관리가-해결해야-할-일" data-title="코드 관리가 해결해야 할 일" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 10 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">10 · TWO-COLUMN-COMPARE</p><h2>코드 관리가 해결해야 할 일</h2></header><div class="groups grid-2"><article class="group"><h3>단순 저장의 한계</h3><ul>
+<li>파일 이름에 날짜와 final을 붙이는 방식은 어느 파일이 기준인지 설명하지 못한다.</li>
+<li>여러 사람이 같은 파일을 고치면 누가 무엇을 바꾸었는지와 어떤 변경을 합쳐야 하는지 알기 어렵다.</li>
+</ul></article><article class="group"><h3>버전 관리</h3><ul>
+<li>버전 관리는 파일의 각 상태와 변경 이유·작성자·앞 상태의 연결을 기록하는 방법이다.</li>
+<li>기록이 있으면 이전 상태를 찾고 두 변경을 비교하며 필요한 변경을 다시 합칠 수 있다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">10 / 13</span></div></section><section class="slide light two-column-compare question density-low" data-slide-id="s11-문제와-현재-해법-왜-git을-사용하는가" data-title="문제와 현재 해법 — 왜 Git을 사용하는가?" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 11 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">11 · TWO-COLUMN-COMPARE</p><h2>문제와 현재 해법 — 왜 Git을 사용하는가?</h2></header><div class="groups grid-2"><article class="group"><h3>중심 문제와 현재 해법</h3><ul>
+<li>중심 문제는 여러 번 바뀌는 코드의 이전 상태와 변경 이유를 잃지 않고 병렬 변경을 통합하는 것이다.</li>
+<li>현재 해법은 Git이 각 개발자의 컴퓨터에 전체 이력을 저장하고 스냅샷·브랜치·병합으로 변경을 관리하는 것이다.</li>
+</ul></article><article class="group"><h3>효과와 연결 질문</h3><ul>
+<li>Git은 네트워크 없이도 변경을 기록하고 다시 연결된 뒤 공통 조상에서 서로의 작업을 합치게 한다.</li>
+<li>그렇다면 왜 코드 변경을 관리할 때 파일 복사나 하나의 공유 폴더보다 Git을 사용하는가?</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">11 / 13</span></div></section><section class="slide light two-column-compare two-column density-low" data-slide-id="s12-2주차로-이어지는-출발점" data-title="2주차로 이어지는 출발점" data-slide-kind="two-column-compare"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 12 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">12 · TWO-COLUMN-COMPARE</p><h2>2주차로 이어지는 출발점</h2></header><div class="groups grid-2"><article class="group"><h3>다음 내용</h3><ul>
+<li>공개 코드와 오픈소스 라이선스의 차이를 실제 사용·수정·재배포 행동으로 판단한다.</li>
+<li>Git 작업 디렉터리·스테이징·커밋과 GitHub 공유 흐름을 직접 실행한다.</li>
+<li>Python 프로젝트·패키지·가상환경이 다른 사람의 설치와 실행을 돕는 원리를 배운다.</li>
+</ul></article><article class="group"><h3>준비 사항</h3><ul>
+<li>개인 GitHub 계정과 수업용 저장소 접근 권한을 확인한다.</li>
+<li>Python 실행 명령과 프로젝트를 저장할 로컬 폴더를 준비한다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">12 / 13</span></div></section><section class="slide dark summary summary density-low" data-slide-id="s13-summary" data-title="Summary" data-slide-kind="summary"><div class="chrome"><span class="brand"><span class="mark">OS</span><b>Open소스프로그래밍</b></span><span>1주차 · 13 / 13</span></div><div class="slide-inner"><header class="title-block"><p class="section-num">13 · SUMMARY</p><h2>Summary</h2></header><div class="groups grid-2"><article class="group"><h3>강의 진행</h3><ul>
+<li>전반부는 패키지·의존성·테스트·CI, 후반부는 문서·릴리스·커뮤니티·최신 도구로 진행한다.</li>
+<li>한 학기 동안 개인 저장소를 공개 프로젝트 수준의 실행·검증·문서 구조로 개선한다.</li>
+<li>시험·실습·Discussion은 개념 판단과 실제 저장소 증거를 함께 평가한다.</li>
+</ul></article><article class="group"><h3>왜 Git인가</h3><ul>
+<li>Git은 프로젝트 파일의 한 시점 상태를 스냅샷으로 기록하고 앞 스냅샷과 연결한다.</li>
+<li>각 개발자는 전체 이력을 가진 채 독립된 브랜치에서 작업하고 공통 조상에서 변경을 합친다.</li>
+<li>네트워크가 없어도 변경을 기록하고 다시 연결된 뒤 다른 사람의 작업과 통합할 수 있다.</li>
+</ul></article></div></div><div class="slide-foot"><span>Open소스프로그래밍 — 강의계획과 Git 기초</span><span class="counter">13 / 13</span></div></section></div><nav id="nav" aria-label="슬라이드 이동"></nav><div id="progress"></div><div id="overview" aria-label="전체 장표"></div><button id="fullscreen" type="button" aria-label="전체화면으로 전환" title="전체화면 전환 (F)">전체화면</button></main></div><script>
+(() => {
+  const stage=document.getElementById('stage'), slides=[...document.querySelectorAll('.slide')];
+  const nav=document.getElementById('nav'), progress=document.getElementById('progress'), overview=document.getElementById('overview'), fullscreen=document.getElementById('fullscreen');
+  const key='open-source-kami:'+location.pathname;
+  let index=Math.max(0,Math.min(slides.length-1,Number(localStorage.getItem(key)||0)));
+  slides.forEach((slide,i)=>{const b=document.createElement('button');b.setAttribute('aria-label',`슬라이드 ${i+1}`);b.onclick=()=>go(i);nav.appendChild(b)});
+  function scale(){const s=Math.min(innerWidth/1920,innerHeight/1080),x=(innerWidth-1920*s)/2,y=(innerHeight-1080*s)/2;stage.style.transform=`translate(${x}px,${y}px) scale(${s})`}
+  function apply(){slides.forEach((s,i)=>s.classList.toggle('active',i===index));[...nav.children].forEach((b,i)=>b.classList.toggle('active',i===index));progress.style.width=`${((index+1)/slides.length)*100}%`;localStorage.setItem(key,index)}
+  function go(n){index=Math.max(0,Math.min(slides.length-1,n));apply()}
+  function toggleOverview(){overview.classList.toggle('open');if(!overview.classList.contains('open'))return;overview.innerHTML=`<div class="overview-head"><b>전체 장표 · ESC</b><span>${String(index+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}</span></div><div class="overview-grid"></div>`;const grid=overview.querySelector('.overview-grid');slides.forEach((s,i)=>{const c=document.createElement('button');c.className='overview-card'+(i===index?' active':'');c.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${s.dataset.title}</span>`;c.onclick=()=>{overview.classList.remove('open');go(i)};grid.appendChild(c)})}
+  async function toggleFullscreen(){if(!document.fullscreenElement){await document.documentElement.requestFullscreen()}else{await document.exitFullscreen()}}
+  fullscreen.addEventListener('click',toggleFullscreen);
+  document.addEventListener('fullscreenchange',()=>{fullscreen.textContent=document.fullscreenElement?'전체화면 종료':'전체화면';fullscreen.setAttribute('aria-label',document.fullscreenElement?'전체화면 종료':'전체화면으로 전환');scale()});
+  addEventListener('resize',scale);
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&overview.classList.contains('open')){e.preventDefault();toggleOverview();return}if(e.key.toLowerCase()==='f'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();toggleFullscreen();return}if(e.key.toLowerCase()==='o'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();toggleOverview();return}if(overview.classList.contains('open'))return;if(['ArrowRight','PageDown',' ','ArrowDown'].includes(e.key)){e.preventDefault();go(index+1)}else if(['ArrowLeft','PageUp','ArrowUp'].includes(e.key)){e.preventDefault();go(index-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(slides.length-1)}});
+  let wheel=0,timer;addEventListener('wheel',e=>{if(overview.classList.contains('open'))return;wheel+=e.deltaY+e.deltaX;if(Math.abs(wheel)>70){go(index+(wheel>0?1:-1));wheel=0}clearTimeout(timer);timer=setTimeout(()=>wheel=0,160)},{passive:true});
+  let tx=0,ty=0;addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(index+(dx<0?1:-1))},{passive:true});
+  scale();apply();
+})();
+</script></body></html>
