@@ -11,6 +11,7 @@
 ## 실습자료
 
 - [3주차 · GitHub 저장소와 AI 코딩 에이전트 작업 흐름](Practice/Week03/README.md)
+- [4주차 · 직접 의존성 선언 누락 확인](Practice/Week04/README.md)
 
 3주차 실습은 13:00에 마감하며, 이후에는 학생 저장소의 push 권한이 비활성화됩니다.
 

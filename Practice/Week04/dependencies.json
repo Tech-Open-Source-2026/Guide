@@ -1,0 +1,27 @@
+[
+  {
+    "project": "greeting",
+    "used": [
+      "termcolor"
+    ],
+    "declared": []
+  },
+  {
+    "project": "report",
+    "used": [
+      "pandas"
+    ],
+    "declared": [
+      "pandas",
+      "termcolor"
+    ]
+  },
+  {
+    "project": "chart",
+    "used": [
+      "pandas",
+      "matplotlib"
+    ],
+    "declared": []
+  }
+]
