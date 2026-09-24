@@ -8,7 +8,7 @@
 
 HTML 강의자료의 현재 공개 범위는 1–4주차입니다.
 
-- [5주차 · 테스트와 품질 확인 — 강의자료 PDF (20쪽)](Lecture_materials/Week5/lecture.pdf)
+- [5주차 · 테스트와 품질 확인 — 강의자료 PDF (14쪽)](Lecture_materials/Week5/lecture.pdf)
 
 ## 실습자료
 
