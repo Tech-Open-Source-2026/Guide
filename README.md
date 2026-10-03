@@ -6,7 +6,9 @@
 
 첫 화면에서 주차를 선택한 뒤 `강의 시작`을 누르면 발표 덱이 열립니다. 주차 선택 화면으로 돌아갈 때는 브라우저의 뒤로 가기를 사용합니다.
 
-HTML 강의자료의 현재 공개 범위는 1–5주차입니다.
+HTML 강의자료의 현재 공개 범위는 1–6주차입니다.
+
+- [6주차 HTML · 코드 품질 자동화](https://tech-open-source-2026.github.io/Guide/Lecture_materials/Week6/)
 
 - [5주차 · 테스트와 품질 확인 — HTML 강의자료 (14장)](https://tech-open-source-2026.github.io/Guide/Lecture_materials/Week5/)
 
