@@ -2,7 +2,7 @@
 
 ## 제출 마감 및 push 권한 안내
 
-제출 마감은 **2026년 11월 9일(월) 14:50 (한국시간, KST)**이다. 마감까지 `greet-release` 저장소에 GitHub Release `v0.2.0`을 게시하고, 수업 개인 저장소에 `Week10/release_url.txt`를 push한다. **14:50부터 push가 차단되며, 14:51에 수강생 개인 저장소의 push 권한을 일괄 회수**한다. 마감 시각에 `release_url.txt`가 가리키는 Release와 `v0.2.0` 태그의 커밋을 기록해 두며, 마감 뒤 태그를 옮기거나 Release를 고쳐도 기록한 커밋과 Release가 채점 기준이다.
+제출 마감은 **2026년 11월 9일(월) 14:56 (한국시간, KST)**이다. 마감까지 `greet-release` 저장소에 GitHub Release `v0.2.0`을 게시하고, 수업 개인 저장소에 `Week10/release_url.txt`를 push한다. **14:56부터 push가 차단되며, 14:57에 수강생 개인 저장소의 push 권한을 일괄 회수**한다. 마감 시각에 `release_url.txt`가 가리키는 Release와 `v0.2.0` 태그의 커밋을 기록해 두며, 마감 뒤 태그를 옮기거나 Release를 고쳐도 기록한 커밋과 Release가 채점 기준이다.
 
 - 서술형 문제는 **다음 수업 시작 10분 후 전원이 함께** 응시한다. 마감 시점에 `Week10/release_url.txt`가 가리키는 GitHub Release `v0.2.0`의 태그 커밋에 있는 `greet-release` 코드가 문제와 채점의 기준이다.
 - 서술형 평가 대상: 그 태그 커밋의 `.github/dependabot.yml`, `.github/workflows/ci.yml`, `pyproject.toml`, `CHANGELOG.md`, `greet.py`, `.gitignore`와 Release `v0.2.0`의 본문·첨부 파일, Dependabot 업데이트 PR 기록이다. `uv.lock`과 `README.md`는 대상이 아니다. 줄이나 키 이름을 외울 필요는 없고, 각 파일이 하는 일과 0.2.0 공개 절차(업데이트 PR 병합, 변경 기록 작성, 번호 올리기, 태그 붙이기, Release 게시)를 자기 저장소에 비추어 설명할 수 있으면 된다.
